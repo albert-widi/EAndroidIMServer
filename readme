@@ -1,0 +1,13 @@
+Encrypted Android Internet Messaging Back-End Code Using PHP
+Created by Albert Widiatmoko
+2013
+
+Created in order to accomplish study at Multimedia Nusantara University
+This server act as a transportation server for the application.
+
+To use this server :
+1. Change database data in mysqlDB.php.
+2. Turn on web server using XAMPP, etc.
+3. Change IP Address in android application.
+4. Install android application.
+5. Run it.

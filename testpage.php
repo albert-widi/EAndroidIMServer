@@ -36,5 +36,20 @@
             </tr>
         </table>
         </form>
+        
+        <form action="index.php" method="post">
+        <table>
+            
+            <tr>
+                <td>Friend List</td>
+                <td><input type="text" name="friendlist"/></td>
+                <input type="hidden" name="action" value="getFriendList"/>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit"/></td>
+            </tr>
+        </table>
+        </form>
     </body>
 </html>
