@@ -1,0 +1,7 @@
+CHANGELOG
+-------------------------------------------------------------------------
+01-09-2013
+-------------------------------------------------------------------------
+1. Phone checking revised, now using country code. Ex : +62 for indonesia
+2. Friend Checking Fixed using newest mode for phone checking.
+-------------------------------------------------------------------------

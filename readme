@@ -1,6 +1,11 @@
-Encrypted Android Internet Messaging Back-End Code Using PHP
+Encrypted Android Internet Messaging Back-End Code
 Created by Albert Widiatmoko
 2013
+
+Spesification :
+Server Language : PHP
+Web Server      : Apache
+Database        : Mysql
 
 Created in order to accomplish study at Multimedia Nusantara University
 This server act as a transportation server for the application.

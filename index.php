@@ -59,10 +59,10 @@ if(isset($action)) {
             break;
         
         case 'getFriendList':
-            $friendList = $_POST["friendlist"];
+            $friendList = $json->{'friendlist'};
             
             if(!isset($friendList)) {
-                $response = "ERROR";
+                 $response = $jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
                 break;
             }
         

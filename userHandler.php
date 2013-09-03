@@ -1,12 +1,15 @@
 <?php
 include 'mysqlDB.php';
+include 'tools.php';
 
 Class UserHandler {
     private $database;
+    private $tools;
     private $jsonHandler;
     
     function __construct($json_handler) {
         $this->database = new MysqlDB();
+        $this->tools = new Tools();
         $this->jsonHandler = $json_handler;
     }
     
@@ -56,7 +59,7 @@ Class UserHandler {
     
     //update user
     public function updateUser($phoneNumber, $userName, $gcmId, $publicKey) {
-        $queryString = "UPDATE users SET name = '".$userName."', gcm_id = '".$gcm_id."', public_key = '".$publicKey."'".
+        $queryString = "UPDATE users SET name = '".$userName."', gcm_id = '".$gcmId."', public_key = '".$publicKey."'".
                        "WHERE phone_number = '".$phoneNumber."'";
         
         $this->database->query($queryString);
@@ -70,21 +73,32 @@ Class UserHandler {
     
     //get user friends
     public function getUserFriends($friendListString) {
-        $queryString = "SELECT * FROM users WHERE phone_number IN(".$friendListString.")";
+        $fixedFriendList = $this->tools->getFixedFriendList($friendListString);
+        $queryString = "SELECT * FROM users WHERE phone_number IN(".$fixedFriendList.")";
         
-        $this->database->query($queryString);      
+        $this->database->query($queryString); 
+        
         if($this->database->result) {
             $friendList = array();
             $friendList['error'] = 0;
+            $friendList['message'] = "FRIEND_SEARCH_SUCCESS";
+            
             while($row = $this->database->result->fetch_array(MYSQLI_ASSOC)) {
-                $friendList[$row['phone_number']] = $row['gcm_id'];
-                $friendList[$row['phone_number']] = $row['public_key'];
+                $friendList[$row['phone_number']] = $row['name'].";";
+                $friendList[$row['phone_number']] .= $row['gcm_id'].";";
+                $friendList[$row['phone_number']] .= $row['public_key'];
             }
             
-            return $this->jsonHandler($friendList);
+            return $this->jsonHandler->encodeJson($friendList);
         }
         else {
-            return $this->jsonHandler->createMessage(1, "FRIEND_SEARCH_FAILED");
+            /*$content = $queryString;
+            $fp = fopen($_SERVER['DOCUMENT_ROOT'] . "/errorlog.txt","wb");
+            fwrite($fp,$content);
+            fclose($fp);*/
+            
+            //echo $queryString;
+            return $this->jsonHandler->createSimpleResponseMessage(1, "FRIEND_SEARCH_FAILED");
         }
     }
     
