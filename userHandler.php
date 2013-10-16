@@ -14,7 +14,11 @@ Class UserHandler {
     }
     
     public function checkRegister($phoneNumber) {
-        $queryString = "SELECT name FROM users WHERE phone_number = '".$phoneNumber."'";
+        if(!isset($phoneNumber)) {
+            return $this->jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
+        }
+        
+        $queryString = "SELECT id, name FROM users WHERE phone_number = '".$phoneNumber."'";
         
         $this->database->query($queryString);
         
@@ -23,17 +27,17 @@ Class UserHandler {
                 $row = $this->database->result->fetch_array(MYSQLI_ASSOC);
                 
                 $messageArray = array("status" => "exists",
+                                      "id" => $row['id'],
                                       "name" => $row['name']);
                 
                 return $this->jsonHandler->encodeJson($messageArray);
-                //return "EXISTS";
             }
             else {
                 $messageArray = array("status" => "noexists",
+                                      "id" => "0",
                                       "name" => "");
                 
                 return $this->jsonHandler->encodeJson($messageArray);
-                //return "NOEXISTS";
             }
         }
         else {
@@ -43,22 +47,39 @@ Class UserHandler {
     
     //register user
     public function registerUser($phoneNumber, $userName, $gcmId, $publicKey) {
+        if(!isset($phoneNumber) || !isset($userName) || !isset($gcmId) || !isset($publicKey)) {
+            return $this->jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
+        }
+        $responseMessage = array();
         $queryString = "INSERT INTO users(phone_number, name, gcm_id, public_key) ". 
                        "VALUES('".$phoneNumber."', '".$userName."', '".$gcmId."', '".$publicKey."')";
             
         $this->database->query($queryString);
         if($this->database->result) {
-            //return "REG_SUCCESS";
-            return $this->jsonHandler->createSimpleResponseMessage(0, "REG_SUCCESS");
+            $id = $this->database->insertId();
+            
+            $responseMessage['error'] = 0;
+            $responseMessage['message'] = "REG_SUCCESS";
+            $responseMessage['userid'] = $id;
+            
+            return $this->jsonHandler->encodeJson($responseMessage);
+            //return $this->jsonHandler->createSimpleResponseMessage(0, "REG_SUCCESS");
         }
         else {
-            //return "REG_ERROR";
-            return $this->jsonHandler->createSimpleResponseMessage(1, "REG_ERROR");
+            $responseMessage['error'] = 1;
+            $responseMessage['message'] = "REG_ERROR";
+            
+            return $this->jsonHandler->encodeJson($responseMessage);
+            //return $this->jsonHandler->createSimpleResponseMessage(1, "REG_ERROR");
         }
     }
     
     //update user
     public function updateUser($phoneNumber, $userName, $gcmId, $publicKey) {
+        if(!isset($phoneNumber) || !isset($userName) || !isset($gcmId) || !isset($publicKey)) {
+            return $this->jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
+        }
+        
         $queryString = "UPDATE users SET name = '".$userName."', gcm_id = '".$gcmId."', public_key = '".$publicKey."'".
                        "WHERE phone_number = '".$phoneNumber."'";
         
@@ -73,6 +94,10 @@ Class UserHandler {
     
     //get user friends
     public function getUserFriends($friendListString) {
+        if(!isset($friendListString)) {
+            return $this->jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
+        }
+        
         $fixedFriendList = $this->tools->getFixedFriendList($friendListString);
         $queryString = "SELECT * FROM users WHERE phone_number IN(".$fixedFriendList.")";
         
@@ -92,10 +117,11 @@ Class UserHandler {
             return $this->jsonHandler->encodeJson($friendList);
         }
         else {
-            /*$content = $queryString;
+            //LOG PURPOSE
+            $content = $queryString;
             $fp = fopen($_SERVER['DOCUMENT_ROOT'] . "/errorlog.txt","wb");
             fwrite($fp,$content);
-            fclose($fp);*/
+            fclose($fp);
             
             //echo $queryString;
             return $this->jsonHandler->createSimpleResponseMessage(1, "FRIEND_SEARCH_FAILED");
@@ -103,7 +129,15 @@ Class UserHandler {
     }
     
     //send
-    public function sendMessage() {
+    public function sendMessage($gcmSender, $gcmReceive, $message, $messageHash) {
+        if(!isset($gcmSender) || !isset($gcmReceive) || !isset($message) || !isset($messageHash)) {
+            return $this->jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
+        }
+        
+         // Set POST variables
+        $url = 'https://android.googleapis.com/gcm/send';
+        $api_key = "AIzaSyAmxWvTVG-0OvAzV0m55Leip-EzaVq-Pts";
+        
         
     }
 }

@@ -22,6 +22,10 @@ Class MysqlDB {
         $this->closeResult();
         $this->result = $this->connection->query($queryString);
     }
+    
+    function insertId() {
+        return $this->connection->insert_id;
+    }
         
     private function closeResult() {
         if(isset($result)) {

@@ -24,10 +24,11 @@ Class Tools {
         else {
             return false;
         }
-        $content = $fixedList;
+        
+        /*$content = $fixedList;
         $fp = fopen($_SERVER['DOCUMENT_ROOT'] . "/listlog.txt","wb");
         fwrite($fp,$content);
-        fclose($fp);
+        fclose($fp);*/
         
         return substr($fixedList, 0, -1);
     }

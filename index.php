@@ -19,11 +19,6 @@ if(isset($action)) {
     switch($action) {
         case 'checkreg':
             $phoneNumber = $json->{'phonenumber'};
-        
-            if(!isset($phoneNumber)) {
-                $response = $jsonHandler->createMessage(1, "INVALID_DATA");
-                break;
-            }
                
             $response = $userHandler->checkRegister($phoneNumber);
             break;
@@ -31,48 +26,35 @@ if(isset($action)) {
         case 'register':
             $phoneNumber = $json->{'phonenumber'};
             $userName = $json->{'username'};
-            $gcm_id = $json->{'gcmid'};
-            $public_key = $json->{'publickey'};
+            $gcmId = $json->{'gcmid'};
+            $publicKey = $json->{'publickey'};
         
-            if(!isset($phoneNumber) || !isset($userName) || !isset($gcm_id) || !isset($public_key)) {
-                //$response = "ERROR";
-                $response = $jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
-                break;
-            }
-        
-            $response = $userHandler->registerUser($phoneNumber, $userName, $gcm_id, $public_key);            
+            $response = $userHandler->registerUser($phoneNumber, $userName, $gcmId, $publicKey);            
             break;
         
         case 'updateuser':
             $phoneNumber = $json->{'phonenumber'};
             $userName = $json->{'username'};
-            $gcm_id = $json->{'gcmid'};
-            $public_key = $json->{'publickey'};
+            $gcmId = $json->{'gcmid'};
+            $publicKey = $json->{'publickey'};
             
-            if(!isset($phoneNumber) || !isset($userName) || !isset($gcm_id) || !isset($public_key)) {
-                //$response = "ERROR";
-                $response = $jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
-                break;
-            }
-            
-            $response = $userHandler->updateUser($phoneNumber, $userName, $gcm_id, $public_key);
+            $response = $userHandler->updateUser($phoneNumber, $userName, $gcmId, $publicKey);
             break;
         
         case 'getFriendList':
             $friendList = $json->{'friendlist'};
-            
-            if(!isset($friendList)) {
-                 $response = $jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
-                break;
-            }
         
             $response = $userHandler->getUserFriends($friendList);
             break;
         
         case 'sendMessage':
-            $gcm_sender = $_POST['gcmsender'];
-            $gcm_receive = $_POST['gcmreceive'];
-            $message = $_POST['message'];
+            $senderID = $json->{'senderid'};
+            $gcmSender = $json->{'gcmsender'};
+            $gcmReceive = $json->{'gcmreceive'};
+            $message = $json->{'message'};
+            $messageHash = $json->{'messagehash'};
+            
+            $response = $userHandler->sendMessage($gcmSender, $gcmReceive, $message, $messageHash);
             break;
     }
     
