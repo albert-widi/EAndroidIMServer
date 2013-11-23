@@ -49,7 +49,12 @@ switch($action) {
             if($result == false) {
                 die('Curl failed: ' . curl_error($ch));
             }
+            else {
+                echo "Result : ".$result."<br>";
+                echo curl_error($ch)."<br>";
+                echo "Success";
             
+}            
             // Close connection
             curl_close($ch);
         }
