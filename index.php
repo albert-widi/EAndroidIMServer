@@ -48,13 +48,13 @@ if(isset($action)) {
             break;
         
         case 'sendMessage':
-            $senderID = $json->{'senderid'};
-            $gcmSender = $json->{'gcmsender'};
-            $gcmReceive = $json->{'gcmreceive'};
+            $phoneSender = $json->{'phonesender'};
+            $phoneReceiver = $json->{'phonereceive'};
             $message = $json->{'message'};
+            $messageKey = $json->{'messagekey'};
             $messageHash = $json->{'messagehash'};
             
-            $response = $userHandler->sendMessage($gcmSender, $gcmReceive, $message, $messageHash);
+            $response = $userHandler->sendMessage($phoneSender, $phoneReceiver, $message, $messageKey, $messageHash);
             break;
     }
     

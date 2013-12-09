@@ -1,16 +1,26 @@
 <?php
-include 'mysqlDB.php';
+include 'userHandler.php';
+include 'jsonHandler.php';
 
 $db = new MysqlDB();
 $action = $_POST['action'];
 
+$jsonHandler = new JSONHandler();
+$userHandler = new UserHandler($jsonHandler);
+
 switch($action) {
+    case 'getfriend':
+        $friendList = $_POST['friendlist'];
+        $response = $userHandler->getUserFriends($friendList);
+        echo $response;
+        break;
+
     case 'sendmessage':
         echo "Sending Message<br>";
         // Set POST variables
         $url = 'https://android.googleapis.com/gcm/send';
     
-        $api_key = "AIzaSyAmxWvTVG-0OvAzV0m55Leip-EzaVq-Pts";
+        $api_key = "AIzaSyAL4humet5NGC_NqiHb11WA_1ojc_rdjI4";
         $message = $_POST['message'];
         $queryString = "SELECT gcm_id FROM users WHERE phone_number = '+6281380832112'";
         $db->query($queryString);
@@ -26,7 +36,7 @@ switch($action) {
             $fields = array('registration_ids' => $reg_id,
                             'data' => array("message" => $message));
             
-            $headers = array('Authorization: key='.$api_key,
+            $headers = array('Authorization: key=' . $api_key,
                              'Content-Type: application/json');
             
             // Open connection
@@ -57,6 +67,7 @@ switch($action) {
 }            
             // Close connection
             curl_close($ch);
+            echo "<br>".$result;
         }
         else {
             echo $queryString;
