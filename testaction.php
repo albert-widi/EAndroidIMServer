@@ -1,4 +1,5 @@
 <?php
+@include 'mysqlDB.php';
 include 'userHandler.php';
 include 'jsonHandler.php';
 

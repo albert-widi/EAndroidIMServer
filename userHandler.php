@@ -1,6 +1,7 @@
 <?php
 include 'mysqlDB.php';
 include 'tools.php';
+include 'messageHandler.php';
 
 Class UserHandler {
     private $database;
@@ -115,57 +116,19 @@ Class UserHandler {
     }
     
     //send
-    public function sendMessage($phoneSender, $phoneReceive, $gcmReceive, $message, $messageHash) {
-        if(!isset($gcmSender) || !isset($gcmReceive) || !isset($message) || !isset($messageHash)) {
+    /*public function sendMessage($phoneSender, $phoneReceive, $senderName, $message, $messageKey, $messageHash) {
+        $messageHandler = new MessageHandler($this->database);
+        $response = $messageHandler->sendMessage($phoneSender, $phoneReceive, $senderName, $message, $messageKey, $messageHash);
+
+        if($response == "INVALID_DATA") {
             return $this->jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
         }
-        
-        // Set POST variables
-        $url = 'https://android.googleapis.com/gcm/send';
-        $api_key = "AIzaSyAL4humet5NGC_NqiHb11WA_1ojc_rdjI4";
-
-        //lookup for user gcmid
-        $queryString = "SELECT gcm_id FROM users WHERE phone_number = '".$phoneReceive."'";
-        $db->query($queryString);
-        if(!$db->result) {
-           return $this->jsonHandler->createSimpleResponseMessage(1, "SEND_FAILED"); 
+        else if($response == "SEND_FAILED") {
+            return $this->jsonHandler->createSimpleResponseMessage(1, "SEND_FAILED");
         }
-         $row = $db->result->fetch_array(MYSQLI_ASSOC);
-         $gcmId = $row['gcm_id'];
-        
-        $reg_id = array($gcmId);
-        $fields = array('registration_ids' => $reg_id,
-                        'data' => array("message" => $message, "key" => $messageKey, "hash" => $messagehash, "whosent" => $phoneSender));
-        
-        $headers = array('Authorization: key=' . $api_key,
-                         'Content-Type: application/json');
-        
-        // Open connection
-        $ch = curl_init();
-        
-        // Set the url, number of POST vars, POST data
-        curl_setopt($ch, CURLOPT_URL, $url);
-        
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // Disabling SSL Certificate support temporarly
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-        
-        // Execute post
-        $result = curl_exec($ch);
-        
-        if($result == false) {
-            die('Curl failed: ' . curl_error($ch));
+        else if($response == "SEND_SUCCESS") {
+            return $this->jsonHandler->createSimpleResponseMessage(0, "SEND_SUCCESS");
         }
-        else {
-            return $this->jsonHandler->createSimpleResponseMessage(0, "SEND_SUCCESS"); 
-        }
-              
-        // Close connection
-        curl_close($ch);
-    }
+    }*/
 }
 ?>
