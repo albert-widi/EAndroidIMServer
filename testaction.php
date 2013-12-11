@@ -10,6 +10,9 @@ $jsonHandler = new JSONHandler();
 $userHandler = new UserHandler($jsonHandler);
 
 switch($action) {
+    case 'register':
+        
+
     case 'getfriend':
         $friendList = $_POST['friendlist'];
         $response = $userHandler->getUserFriends($friendList);

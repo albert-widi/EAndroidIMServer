@@ -23,6 +23,10 @@ Class MysqlDB {
         $this->result = $this->connection->query($queryString);
     }
     
+    function numRows() {
+    
+    }
+
     function insertId() {
         return $this->connection->insert_id;
     }
