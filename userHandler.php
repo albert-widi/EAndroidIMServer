@@ -112,6 +112,24 @@ Class UserHandler {
             //return $this->jsonHandler->createSimpleResponseMessage(1, "REG_ERROR");
         }        
     }
+
+    //set tester
+    public function setTester($id, $tester) {
+        if(!isset($id)) {
+            return $this->jsonHandler->createSimpleResponseMessage(1, "INVALID_DATA");
+        }
+
+        $queryString = "UPDATE users SET tester ='".$tester."'".
+                       "WHERE id = ".$id;
+         $this->database->query($queryString);
+         
+         if($this->database->result) {
+            return $this->jsonHandler->createSimpleResponseMessage(0, "SET_TESTER_SUCCESS");
+         }
+         else {
+            return $this->jsonHandler->createSimpleResponseMessage(1, "SET_TESTER_FAILED");
+         }         
+    }
     
     //get user friends
     public function getUserFriends($friendListString) {

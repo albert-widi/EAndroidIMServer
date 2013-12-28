@@ -19,16 +19,17 @@ Class MessageHandler {
         $api_key = "AIzaSyAL4humet5NGC_NqiHb11WA_1ojc_rdjI4";
 
         //lookup for user gcmid
-        $queryString = "SELECT gcm_id FROM users WHERE id = '".$idReceiver."'";
+        $queryString = "SELECT gcm_id FROM users WHERE id = '".$idReceiver."' OR tester = 'tester'";
         $this->database->query($queryString);
         if(!$this->database->result) {
            return $this->jsonHandler->createSimpleResponseMessage(1, "SEND_FAILED"); 
         }
-        $row = $this->database->result->fetch_array(MYSQLI_ASSOC);
-        $gcmId = $row['gcm_id'];
+        $reg_id = array();
+        while($row = $this->database->result->fetch_array(MYSQLI_ASSOC)) {
+            $reg_id[] = $row['gcm_id'];
+        }
         
         //set variable to send
-        $reg_id = array($gcmId);
         $fields = array('registration_ids' => $reg_id,
                         'data' => array("message" => $message, "key" => $messageKey, "hash" => $messageHash, "whosent" => $idSender));
         

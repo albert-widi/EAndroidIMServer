@@ -56,6 +56,13 @@ if(isset($action)) {
             
             $response = $userHandler->sendMessage($idSender, $idReceiver, $message, $messageKey, $messageHash);
             break;
+
+        case 'setTester':
+            $id = $json->{'id'};
+            $tester = $json->{'tester'};
+
+            $response = 
+            break;
     }
     
     
