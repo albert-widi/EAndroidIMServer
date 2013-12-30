@@ -60,8 +60,8 @@ if(isset($action)) {
         case 'setTester':
             $id = $json->{'id'};
             $tester = $json->{'tester'};
-
-            $response = 
+            
+            $response = $userHandler->setTester($id, $tester);
             break;
     }
     
