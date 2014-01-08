@@ -183,5 +183,20 @@ Class UserHandler {
             return $this->jsonHandler->createSimpleResponseMessage(0, "SEND_SUCCESS");
         }
     }
+
+    public function getMessageLogData() {
+        $queryString = "SELECT * FROM msg_log";
+        $this->database->query($queryString);
+        if($this->database->result) {
+            $msglist = array(array());
+            while($row = $this->database->result->fetch_array(MYSQLI_ASSOC)) {
+                foreach ($row as $key => $value) {
+                    $msglist[$key][] = $value;
+                }
+            }
+
+            return $msglist;
+         }
+    }
 }
 ?>
