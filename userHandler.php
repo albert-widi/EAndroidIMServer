@@ -198,5 +198,20 @@ Class UserHandler {
             return $msglist;
          }
     }
+
+    //testing purpose
+    public function updatePublicKey($id, $publicKey) {
+        $queryString = "UPDATE users SET public_key = '".$publicKey."'".
+                       "WHERE id = ".$id;
+
+        $this->database->query($queryString);
+         
+         if($this->database->result) {
+            return $this->jsonHandler->createSimpleResponseMessage(0, "PUBLICKEY_UPDATE_SUCCESS");
+         }
+         else {
+            return $this->jsonHandler->createSimpleResponseMessage(1, "PUBLICKEY_UPDATE_FAILED");
+         }         
+    }
 }
 ?>

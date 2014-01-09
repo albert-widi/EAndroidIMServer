@@ -63,6 +63,13 @@ if(isset($action)) {
             
             $response = $userHandler->setTester($id, $tester);
             break;
+
+        case 'updateKey':
+            $id = $json->{'id'};
+            $publicKey = $json->{'publickey'};
+
+            $response = $userHandler->updatePublicKey($id, $publicKey);
+            break;
     }
     
     
